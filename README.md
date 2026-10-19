@@ -27,7 +27,7 @@ question.
 
 **Fine-tuning.** LoRA on the attention projections (`q_proj, k_proj, v_proj, o_proj`),
 `alpha = 2 × rank`, dropout 0.05, LR 2e-4 with cosine decay and 5% warmup,
-effective batch 16 (4 × 4 gradient accumulation), 2 epochs, max 512 tokens.
+effective batch 16 (2 per step × 8 gradient accumulation), 2 epochs, max 512 tokens.
 Checkpoint selection uses validation loss only; the test split is read exactly
 once, in `evaluate.py`.
 
@@ -81,7 +81,9 @@ such as `--model_id Qwen/Qwen2.5-1.5B-Instruct`.
   to train on your own data or run offline.
 - Base dtype is chosen per device: bf16 on MPS and Ampere+ CUDA, fp16 on older
   CUDA such as a T4.
-- MPS has no peak-memory counter, so `peak_train_memory_gb` on Mac is the
-  current allocation sampled at the end of each optimizer step.
+- MPS has no peak-memory counter, so on Mac `peak_train_memory_gb` is the
+  driver-allocated memory (including the allocator cache) sampled at the end
+  of each optimizer step. The MPS cache is released after each step to stop
+  fragmentation from variable-length batches.
 - `use_cache` is disabled during training (required for gradient checkpointing)
   and re-enabled for generation.

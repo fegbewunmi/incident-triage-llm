@@ -37,6 +37,10 @@ class MemoryCallback(TrainerCallback):
 
     def on_step_end(self, args, state, control, **kwargs):
         self.peak_gb = max(self.peak_gb, peak_memory_gb(self.device))
+        # Dynamic padding gives every batch a different shape, which fragments
+        # the MPS allocator cache until it runs out. Release the cache each step.
+        if self.device.type == "mps":
+            torch.mps.empty_cache()
 
 
 def parse_args():
@@ -49,8 +53,8 @@ def parse_args():
     p.add_argument("--target_modules", default="q_proj,k_proj,v_proj,o_proj")
     p.add_argument("--lr", type=float, default=2e-4)
     p.add_argument("--epochs", type=float, default=2)
-    p.add_argument("--batch_size", type=int, default=4)
-    p.add_argument("--grad_accum", type=int, default=4)
+    p.add_argument("--batch_size", type=int, default=2)
+    p.add_argument("--grad_accum", type=int, default=8)
     p.add_argument("--max_len", type=int, default=512)
     p.add_argument("--train_size", type=int, default=3000)
     p.add_argument("--val_size", type=int, default=300)
