@@ -1,7 +1,9 @@
 checkpoints/
 adapters/
 merged/
+data/generated.jsonl
 __pycache__/
 *.pyc
 .venv/
 .DS_Store
+.env

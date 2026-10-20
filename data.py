@@ -1,81 +1,62 @@
-"""Dataset loading, chat-template formatting, and prompt-token loss masking.
+"""Training data: chat formatting of triage records and prompt-token loss masking.
 
-We use databricks/databricks-dolly-15k (CC BY-SA 3.0, ungated). Records with
-a context field are rendered as "context + instruction"; the rest as plain
-instructions. Train/val/test are disjoint fixed-seed splits, and checkpoint
-selection uses val only — test is read exactly once in evaluate.py.
+Each record becomes [system, user=alert JSON, assistant=triage JSON]. Prompt
+tokens are labeled -100 so the loss covers only the triage JSON the model must
+produce. The test split is never touched here.
 """
 
+import json
 import os
 from dataclasses import dataclass
 
 import torch
-from datasets import load_dataset
+from datasets import Dataset
 
-SYSTEM_PROMPT = "You are a helpful assistant. Answer concisely and accurately."
+from schema import SHORT_SYSTEM, render_alert, render_label
 
-
-def build_messages(example: dict) -> list[dict]:
-    instruction = example["instruction"].strip()
-    context = (example.get("context") or "").strip()
-    user = f"{context}\n\n{instruction}" if context else instruction
-    return [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": user},
-    ]
+# Llama 3.x chat templates stamp "Today Date: <today>" into the system header.
+# Pin it so training and evaluation prompts are identical regardless of the day.
+FIXED_DATE = "01 Jan 2026"
 
 
-def load_splits(train_size: int, val_size: int, test_size: int, seed: int = 42):
-    # Set DATASET_JSONL to a local .jsonl with instruction/context/response fields
-    # to run offline or on your own data.
-    local = os.environ.get("DATASET_JSONL")
-    if local:
-        ds = load_dataset("json", data_files=local, split="train")
-    else:
-        ds = load_dataset("databricks/databricks-dolly-15k", split="train")
-    # Drop very long responses so a 512-token window keeps most of the answer.
-    ds = ds.filter(lambda ex: len(ex["response"]) < 1200)
-    ds = ds.shuffle(seed=seed)
-    n = train_size + val_size + test_size
-    assert n <= len(ds), f"asked for {n} rows, dataset has {len(ds)}"
-    ds = ds.select(range(n))
-    return {
-        "train": ds.select(range(0, train_size)),
-        "val": ds.select(range(train_size, train_size + val_size)),
-        "test": ds.select(range(train_size + val_size, n)),
-    }
-
-
-def tokenize_with_mask(example: dict, tokenizer, max_len: int) -> dict:
-    """Return input_ids/attention_mask/labels where prompt tokens have label -100
-    so the loss is computed only on the assistant's response."""
-    messages = build_messages(example)
-    prompt_ids = tokenizer.apply_chat_template(
-        messages, tokenize=True, add_generation_prompt=True, return_dict=False
+def chat_ids(tokenizer, messages, add_generation_prompt: bool) -> list[int]:
+    return tokenizer.apply_chat_template(
+        messages, tokenize=True, add_generation_prompt=add_generation_prompt,
+        return_dict=False, date_string=FIXED_DATE,
     )
-    full_ids = tokenizer.apply_chat_template(
-        messages + [{"role": "assistant", "content": example["response"].strip()}],
-        tokenize=True,
-        add_generation_prompt=False,
-        return_dict=False,
-    )
-    # Sanity: the full sequence must start with the prompt tokens.
+
+
+def prompt_messages(alert: dict, system: str = SHORT_SYSTEM, shots: list[dict] | None = None) -> list[dict]:
+    msgs = [{"role": "system", "content": system}]
+    for s in shots or []:
+        msgs += [{"role": "user", "content": render_alert(s["alert"])},
+                 {"role": "assistant", "content": render_label(s["label"])}]
+    msgs.append({"role": "user", "content": render_alert(alert)})
+    return msgs
+
+
+def load_jsonl(path: str) -> list[dict]:
+    with open(path) as f:
+        return [json.loads(line) for line in f]
+
+
+def tokenize_with_mask(record: dict, tokenizer, max_len: int) -> dict | None:
+    msgs = prompt_messages(record["alert"])
+    prompt_ids = chat_ids(tokenizer, msgs, add_generation_prompt=True)
+    full_ids = chat_ids(tokenizer, msgs + [{"role": "assistant", "content": render_label(record["label"])}], False)
     assert full_ids[: len(prompt_ids)] == prompt_ids, "chat template prefix mismatch"
-
-    full_ids = full_ids[:max_len]
-    labels = [-100] * len(prompt_ids) + full_ids[len(prompt_ids):]
-    labels = labels[:max_len]
+    if len(full_ids) > max_len:
+        return None  # never truncate: a cut-off target teaches broken JSON
     return {
         "input_ids": full_ids,
         "attention_mask": [1] * len(full_ids),
-        "labels": labels,
+        "labels": [-100] * len(prompt_ids) + full_ids[len(prompt_ids):],
     }
 
 
 @dataclass
 class PadCollator:
-    """Dynamic padding: each batch is padded to its own longest row, not to
-    max_len. This is the single biggest throughput win over padding='max_length'."""
+    """Dynamic padding: each batch pads to its own longest row."""
 
     pad_token_id: int
 
@@ -87,18 +68,19 @@ class PadCollator:
             ids.append(f["input_ids"] + [self.pad_token_id] * pad)
             mask.append(f["attention_mask"] + [0] * pad)
             labels.append(f["labels"] + [-100] * pad)
-        return {
-            "input_ids": torch.tensor(ids),
-            "attention_mask": torch.tensor(mask),
-            "labels": torch.tensor(labels),
-        }
+        return {"input_ids": torch.tensor(ids), "attention_mask": torch.tensor(mask), "labels": torch.tensor(labels)}
 
 
-def prepare(tokenizer, max_len: int, train_size: int, val_size: int, test_size: int, seed: int = 42):
-    raw = load_splits(train_size, val_size, test_size, seed)
-    cols = raw["train"].column_names
-    tok = {
-        k: v.map(lambda ex: tokenize_with_mask(ex, tokenizer, max_len), remove_columns=cols)
-        for k, v in raw.items()
-    }
-    return raw, tok
+def prepare(tokenizer, data_dir: str, max_len: int, train_limit: int | None = None) -> dict:
+    out = {}
+    for split in ("train", "val"):
+        rows = load_jsonl(os.path.join(data_dir, f"{split}.jsonl"))
+        if split == "train" and train_limit:
+            rows = rows[:train_limit]
+        toks = [tokenize_with_mask(r, tokenizer, max_len) for r in rows]
+        kept = [t for t in toks if t is not None]
+        lengths = [len(t["input_ids"]) for t in kept]
+        print(f"{split}: {len(kept)}/{len(rows)} kept (dropped {len(rows) - len(kept)} over {max_len} tokens), "
+              f"tokens median={sorted(lengths)[len(lengths) // 2]} max={max(lengths)}")
+        out[split] = Dataset.from_list(kept)
+    return out

@@ -4,3 +4,6 @@ peft>=0.13
 datasets>=3.0
 accelerate>=1.0
 huggingface_hub>=0.25
+pydantic>=2.5
+google-genai>=1.0      # data generation + Gemini baseline (Vertex AI or API key)
+anthropic>=0.40        # optional: Claude as teacher or baseline

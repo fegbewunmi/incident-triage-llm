@@ -1,13 +1,13 @@
-"""LoRA supervised fine-tuning of Llama 3.2 (or any chat LLM) on Dolly.
+"""LoRA fine-tuning of Llama 3.2 as the Orion Commerce alert-triage model.
 
 Runs on Apple Silicon (MPS), CUDA, or CPU with no bitsandbytes dependency:
 frozen base weights are held in bf16 (fp16 on pre-Ampere CUDA), LoRA adapter
 weights train in fp32. Checkpoint selection uses the validation split only.
 
 Example:
-  python train.py --run_name r8 --rank 8
-  python train.py --run_name r8_ckpt --rank 8 --grad_ckpt
-  python train.py --run_name r16_3b --rank 16 --model_id meta-llama/Llama-3.2-3B-Instruct
+  python train.py --run_name triage_r8 --rank 8
+  python train.py --run_name triage_r8_ckpt --rank 8 --grad_ckpt
+  python train.py --run_name triage_r16 --rank 16
 """
 
 import argparse
@@ -55,10 +55,9 @@ def parse_args():
     p.add_argument("--epochs", type=float, default=2)
     p.add_argument("--batch_size", type=int, default=2)
     p.add_argument("--grad_accum", type=int, default=8)
-    p.add_argument("--max_len", type=int, default=512)
-    p.add_argument("--train_size", type=int, default=3000)
-    p.add_argument("--val_size", type=int, default=300)
-    p.add_argument("--test_size", type=int, default=500)
+    p.add_argument("--max_len", type=int, default=1024)
+    p.add_argument("--data_dir", default="data")
+    p.add_argument("--train_limit", type=int, default=None, help="use only the first N training records")
     p.add_argument("--grad_ckpt", action="store_true", help="enable gradient checkpointing")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--out_dir", default="adapters")
@@ -79,8 +78,7 @@ def main():
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
 
-    raw, tok = prepare(tokenizer, args.max_len, args.train_size, args.val_size, args.test_size, args.seed)
-    print({k: len(v) for k, v in tok.items()})
+    tok = prepare(tokenizer, args.data_dir, args.max_len, args.train_limit)
 
     model = AutoModelForCausalLM.from_pretrained(args.model_id, dtype=dtype)
     model.config.use_cache = False  # incompatible with gradient checkpointing; re-enabled at inference
@@ -159,9 +157,9 @@ def main():
         "epochs": args.epochs,
         "effective_batch": args.batch_size * args.grad_accum,
         "max_len": args.max_len,
-        "train_size": args.train_size,
-        "val_size": args.val_size,
-        "test_size": args.test_size,
+        "data_dir": args.data_dir,
+        "train_examples": len(tok["train"]),
+        "val_examples": len(tok["val"]),
         "seed": args.seed,
         "trainable_params": trainable,
         "total_params": total,

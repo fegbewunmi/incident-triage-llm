@@ -33,9 +33,9 @@ def reset_peak_memory(device: torch.device) -> None:
 
 
 def peak_memory_gb(device: torch.device) -> float:
-    """Peak memory used by tensors on the device since the last reset (GB).
-    MPS has no peak counter, so we report current allocation; call it at the
-    point of interest (e.g. right after a training step)."""
+    """Peak device memory since the last reset (GB). MPS has no peak counter, so
+    there we report driver-allocated memory (tensors + allocator cache); sample
+    it at the point of interest, e.g. at the end of each training step."""
     if device.type == "cuda":
         return torch.cuda.max_memory_allocated() / 1e9
     if device.type == "mps":
