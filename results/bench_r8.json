@@ -1,0 +1,23 @@
+{
+  "run_name": "r8",
+  "device": "mps",
+  "dtype": "torch.bfloat16",
+  "max_new_tokens": 128,
+  "base": {
+    "median_latency_s": 2.336,
+    "median_decode_tok_per_s": 54.8,
+    "memory_gb": 3.26
+  },
+  "lora_unmerged": {
+    "median_latency_s": 2.484,
+    "median_decode_tok_per_s": 51.5,
+    "memory_gb": 3.27
+  },
+  "lora_merged": {
+    "median_latency_s": 2.336,
+    "median_decode_tok_per_s": 54.8,
+    "memory_gb": 3.27
+  },
+  "merged_dir": "merged/r8",
+  "merge_speedup_pct": 6.0
+}
