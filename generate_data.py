@@ -45,11 +45,25 @@ Rules:
 - Do not repeat the recent deployment list in the description; it is attached separately.
 - Return only the JSON array."""
 
-LEAK_PATTERNS = re.compile(
-    r"\b(noise|false[\s_-]?positive|leak\w*|failed[\s_-]?deploy\w*|dependency[\s_-]?failure|config[\s_-]?change|"
-    r"capacity[\s_-]?saturation|saturat\w*|latency[\s_-]?regression|regression|severity|p[123]|triage)\b",
-    re.IGNORECASE,
+# Two checks. Substring match on text with spaces/underscores/hyphens removed and
+# lowercased, so CamelCase names like "LatencyRegression" are caught too; plus a
+# word-boundary check for P1/P2/P3 (substring would hit things like "p100").
+LEAK_SUBSTRINGS = re.compile(
+    r"(noise|falsepositive|leak|faileddeploy|dependencyfailure|configchange|capacity|saturat|regression|severity|triage)"
 )
+LEAK_PRIORITY = re.compile(r"\bp[123]\b", re.IGNORECASE)
+
+
+def find_leak(text: str) -> str | None:
+    m = LEAK_SUBSTRINGS.search(re.sub(r"[\s_\-]", "", text.lower()))
+    if m:
+        return m.group(0)
+    m = LEAK_PRIORITY.search(text)
+    return m.group(0) if m else None
+
+
+def alert_surface(alert_name: str, description: str, metadata: dict) -> str:
+    return f"{alert_name} {description} {json.dumps(metadata)}"
 
 
 def teacher_view(spec: dict) -> dict:
@@ -64,10 +78,9 @@ def validate(item: dict, spec: dict) -> str | None:
             return f"missing {k}"
     if not isinstance(item["alert_metadata"], dict):
         return "metadata not an object"
-    surface = f"{item['alert_name']} {item['description']} {json.dumps(item['alert_metadata'])}"
-    m = LEAK_PATTERNS.search(surface)
-    if m:
-        return f"label leak: {m.group(0)!r}"
+    leak = find_leak(alert_surface(item["alert_name"], item["description"], item["alert_metadata"]))
+    if leak:
+        return f"label leak: {leak!r}"
     if not (10 <= len(item["description"]) <= 600):
         return "description length"
     if not (5 <= len(item["rationale"]) <= 400):

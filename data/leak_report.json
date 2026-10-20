@@ -1,0 +1,49 @@
+{
+  "train": {
+    "before": 2901,
+    "after": 2657,
+    "removed": 244,
+    "words": {
+      "capacity": 92,
+      "saturat": 76,
+      "regression": 35,
+      "dependencyfailure": 33,
+      "severity": 4,
+      "configchange": 2,
+      "noise": 1,
+      "falsepositive": 1
+    }
+  },
+  "val": {
+    "before": 300,
+    "after": 281,
+    "removed": 19,
+    "words": {
+      "capacity": 8,
+      "saturat": 7,
+      "dependencyfailure": 2,
+      "regression": 2
+    }
+  },
+  "test": {
+    "before": 500,
+    "after": 456,
+    "removed": 44,
+    "words": {
+      "capacity": 20,
+      "saturat": 9,
+      "regression": 6,
+      "dependencyfailure": 5,
+      "severity": 4
+    }
+  },
+  "gold": {
+    "before": 25,
+    "after": 23,
+    "removed": 2,
+    "words": {
+      "capacity": 1,
+      "regression": 1
+    }
+  }
+}
