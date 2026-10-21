@@ -183,6 +183,27 @@ def main():
     print(f"evaluating on {eval_file}: {len(records)} alerts")
     variants = args.variants.split(",")
     results, predictions = {}, {}
+    out_path = os.path.join(args.results_dir, f"eval_triage_{args.run_name}.json")
+
+    def save(verbose=False):
+        """Merge into earlier results for this run and write to disk. Called after
+        every variant, so an interrupted run keeps everything finished so far."""
+        prev = load_json(out_path) if os.path.exists(out_path) else {}
+        if prev.get("eval_file") != eval_file or prev.get("n") != len(records):
+            prev = {}
+        merged = {**prev.get("results", {}), **results}
+        order = list(LABELS)
+        ordered = {v: merged[v] for v in sorted(merged, key=lambda v: order.index(v) if v in order else 99)}
+        out = {"run_name": args.run_name, "eval_file": eval_file, "n": len(records), "results": ordered,
+               "predictions": {**prev.get("predictions", {}),
+                               **{v: [{"id": r["id"], "gold": r["label"], **pr} for r, pr in zip(records, ps)]
+                                  for v, ps in predictions.items()}}}
+        save_json(out_path, out)
+        md = table(ordered)
+        with open(os.path.join(args.results_dir, f"eval_triage_{args.run_name}.md"), "w") as f:
+            f.write(md + "\n")
+        if verbose:
+            print("\n" + md)
 
     local = [v for v in variants if v in ("base_zero", "base_few", "tuned")]
     if local:
@@ -198,11 +219,13 @@ def main():
                 print(f"[{v}]")
                 predictions[v] = run_local(model, tokenizer, records, device, FULL_SYSTEM, shots if v == "base_few" else None)
                 results[v] = score(records, predictions[v])
+                save()
         if "tuned" in local:
             print("[tuned]")
             model = PeftModel.from_pretrained(model, tr["adapter_dir"]).merge_and_unload().to(device)
             predictions["tuned"] = run_local(model, tokenizer, records, device, SHORT_SYSTEM)
             results["tuned"] = score(records, predictions["tuned"])
+            save()
         del model
 
     for v in variants:
@@ -211,29 +234,15 @@ def main():
             client = make_client("gemini", args.gemini_model, thinking_budget=0 if v == "gemini" else -1)
             predictions[v] = run_api(client, records)
             results[v] = score(records, predictions[v], args.gemini_in_price, args.gemini_out_price)
+            save()
         elif v == "claude":
             print(f"[{v}]")
             client = make_client("anthropic", args.claude_model)
             predictions[v] = run_api(client, records, json_mode=False)
             results[v] = score(records, predictions[v], args.claude_in_price, args.claude_out_price)
+            save()
 
-    # Merge into any earlier results for this run, so local and API variants can be run separately.
-    out_path = os.path.join(args.results_dir, f"eval_triage_{args.run_name}.json")
-    prev = load_json(out_path) if os.path.exists(out_path) else {}
-    if prev.get("eval_file") != eval_file or prev.get("n") != len(records):
-        prev = {}
-    merged = {**prev.get("results", {}), **results}
-    order = list(LABELS)
-    ordered = {v: merged[v] for v in sorted(merged, key=lambda v: order.index(v) if v in order else 99)}
-    md = table(ordered)
-    print("\n" + md)
-    out = {"run_name": args.run_name, "eval_file": eval_file, "n": len(records), "results": ordered,
-           "predictions": {**prev.get("predictions", {}),
-                           **{v: [{"id": r["id"], "gold": r["label"], **pr} for r, pr in zip(records, ps)]
-                              for v, ps in predictions.items()}}}
-    save_json(out_path, out)
-    with open(os.path.join(args.results_dir, f"eval_triage_{args.run_name}.md"), "w") as f:
-        f.write(md + "\n")
+    save(verbose=True)
 
 
 if __name__ == "__main__":
