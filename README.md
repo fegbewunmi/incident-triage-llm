@@ -101,6 +101,8 @@ Optimizations, all measured:
 
 ## Results
 
+Every change, the evidence behind it and its effect are in [docs/EXPERIMENT-LOG.md](docs/EXPERIMENT-LOG.md).
+
 <!-- python make_table.py, then paste here -->
 
 _Pending._
