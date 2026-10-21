@@ -124,7 +124,11 @@ severity:
 - P1: critical-path service with high impact.
 - P2: critical-path service with medium impact, or non-critical service with high impact.
 - P3: anything else, and always for noise.
-Impact: high = severe customer-facing degradation (e.g. error rate above ~20%, latency 8x+ baseline, OOM kills, traffic 4x+ capacity); medium = clear but partial degradation; low = minor.
+Impact bands (read them off the evidence numbers):
+- error rate: high 20%+, medium 5-20%, low under 5%
+- p99 latency vs baseline: high 8x+, medium 3-8x, low under 3x
+- resource utilization: high 96%+ or any OOM kills/restarts, medium 86-95%, low under 86%
+- request rate vs baseline: high 4x+, medium 2.5-4x, low under 2.5x
 
 origin_service: the service where the problem actually originates. For dependency_failure this is the failing dependency (use "external" for third-party providers); otherwise it is the alerting service.
 

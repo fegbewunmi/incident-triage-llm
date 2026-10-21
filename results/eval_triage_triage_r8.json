@@ -1,0 +1,3027 @@
+{
+  "run_name": "triage_r8",
+  "eval_file": "data/gold.jsonl",
+  "n": 100,
+  "results": {
+    "tuned": {
+      "n": 100,
+      "valid_json_pct": 100.0,
+      "valid_schema_pct": 100.0,
+      "family_acc_pct": 98.0,
+      "family_macro_f1": 0.976,
+      "severity_acc_pct": 78.0,
+      "origin_acc_pct": 100.0,
+      "exact_match_pct": 77.0,
+      "noise_filtered_pct": 100.0,
+      "incidents_missed": 0,
+      "incidents_total": 81,
+      "median_latency_s": 1.268,
+      "p95_latency_s": 1.414,
+      "mean_input_tokens": 233.0,
+      "mean_output_tokens": 58.4,
+      "cost_per_1k_alerts_usd": 0.0,
+      "confusion": {
+        "failed_deployment": {
+          "failed_deployment": 21
+        },
+        "latency_regression": {
+          "latency_regression": 17
+        },
+        "resource_leak": {
+          "resource_leak": 16
+        },
+        "dependency_failure": {
+          "dependency_failure": 12
+        },
+        "noise": {
+          "noise": 19
+        },
+        "config_change": {
+          "config_change": 7,
+          "failed_deployment": 2
+        },
+        "capacity_saturation": {
+          "capacity_saturation": 6
+        }
+      }
+    }
+  },
+  "predictions": {
+    "tuned": [
+      {
+        "id": "T02805",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A significant jump in error rate post-deployment is a strong indicator of a deployment failure."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate shortly after a deployment is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.2384664159981185,
+        "input_tokens": 197,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate shortly after a deployment is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03170",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The notifications service is experiencing a significant increase in P99 latency over an extended period, indicating a latency regression within the service itself."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A sustained increase in P99 latency over an extended period indicates a performance regression within the service.\"}",
+        "latency_s": 1.2759889580047457,
+        "input_tokens": 283,
+        "output_tokens": 56,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A sustained increase in P99 latency over an extended period indicates a performance regression within the service."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01589",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High database connection utilization coupled with OOM/restarts strongly suggests a resource leak in the notifications service."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High database connection utilization combined with OOM/restarts suggests a resource leak or high contention within the notifications service.\"}",
+        "latency_s": 1.3081432079998194,
+        "input_tokens": 264,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High database connection utilization combined with OOM/restarts suggests a resource leak or high contention within the notifications service."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01692",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "An increased error rate on calls from 'orders' to 'notifications' indicates an issue with the 'notifications' dependency affecting 'orders'."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The orders service is showing an increased error rate when calling the notifications service, indicating a problem with the notifications dependency.\"}",
+        "latency_s": 1.3066278750047786,
+        "input_tokens": 260,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The orders service is showing an increased error rate when calling the notifications service, indicating a problem with the notifications dependency."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00819",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P1",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "Consistently high open file descriptor usage leading to restarts suggests a resource leak in the application."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P2\",\"origin_service\":\"user-auth\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High file descriptor utilization combined with recent OOMs or restarts points to a potential resource leak or high contention.\"}",
+        "latency_s": 1.415846916999726,
+        "input_tokens": 338,
+        "output_tokens": 61,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High file descriptor utilization combined with recent OOMs or restarts points to a potential resource leak or high contention."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02070",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The payments service's P99 latency has steadily increased over an extended period, indicating a performance regression within the service."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P1\",\"origin_service\":\"payments\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A sustained increase in P99 latency over an extended period indicates a performance regression within the service.\"}",
+        "latency_s": 1.2075193749988102,
+        "input_tokens": 222,
+        "output_tokens": 56,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A sustained increase in P99 latency over an extended period indicates a performance regression within the service."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02872",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High file descriptor utilization combined with recent restarts strongly suggests a resource leak in the inventory service."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P2\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"The inventory service is experiencing high file descriptor usage and restarts, suggesting a resource leak.\"}",
+        "latency_s": 1.257861000005505,
+        "input_tokens": 281,
+        "output_tokens": 55,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The inventory service is experiencing high file descriptor usage and restarts, suggesting a resource leak."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01614",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A sustained increase in P99 latency without a corresponding error rate spike or deployment points to a gradual performance degradation or increased load that the service is struggling to handle efficiently."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P2\",\"origin_service\":\"user-auth\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A gradual, prolonged increase in P99 latency over many hours suggests a performance regression or resource contention.\"}",
+        "latency_s": 1.2663865409995196,
+        "input_tokens": 245,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual, prolonged increase in P99 latency over many hours suggests a performance regression or resource contention."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02875",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "An increase in the error rate on the payments service shortly after its own deployment suggests that the new code version has introduced a regression."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"payments\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A significant increase in error rate after a recent deployment points to a problem introduced by the new version.\"}",
+        "latency_s": 1.2689961249998305,
+        "input_tokens": 259,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A significant increase in error rate after a recent deployment points to a problem introduced by the new version."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01203",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "The error rate for the notifications service has jumped significantly from its baseline, indicating a problem within the service, likely introduced by a recent change given the timing."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate shortly after a service deployment is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.2633031669975026,
+        "input_tokens": 221,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate shortly after a service deployment is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01452",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [],
+          "rationale": "A very short-lived spike that quickly returns to baseline is typical of transient network issues or a brief burst of activity that the system handled."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[],\"rationale\":\"A transient, self-resolving spike in a metric is often indicative of a brief, isolated issue or a blip rather than a sustained problem.\"}",
+        "latency_s": 1.229710083003738,
+        "input_tokens": 146,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [],
+          "rationale": "A transient, self-resolving spike in a metric is often indicative of a brief, isolated issue or a blip rather than a sustained problem."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01499",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [],
+          "rationale": "The alert is isolated to a single synthetic probe and does not reflect actual user impact, indicating a localized or transient issue with the probe itself rather than the service."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"api-gateway\",\"first_specialists\":[],\"rationale\":\"A single synthetic probe showing high latency without impact on real user traffic suggests a transient network issue or a very slow probe response.\"}",
+        "latency_s": 1.2426828749958077,
+        "input_tokens": 204,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [],
+          "rationale": "A single synthetic probe showing high latency without impact on real user traffic suggests a transient network issue or a very slow probe response."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00744",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "Frequent firing and clearing without sustained impact points to an alert sensitivity issue or transient system behavior that doesn't require immediate intervention."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[],\"rationale\":\"The alert is flapping, indicating a transient issue or a very sensitive threshold, rather than a sustained problem.\"}",
+        "latency_s": 1.203686041997571,
+        "input_tokens": 263,
+        "output_tokens": 53,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "The alert is flapping, indicating a transient issue or a very sensitive threshold, rather than a sustained problem."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03675",
+        "gold": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "The observed increase in error rate immediately following a configuration change suggests a direct causal link."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"config_change\",\"severity\":\"P3\",\"origin_service\":\"api-gateway\",\"first_specialists\":[\"deployment\",\"knowledge\"],\"rationale\":\"An increase in error rate shortly after a configuration change is a classic symptom of a configuration issue.\"}",
+        "latency_s": 1.1811766250029905,
+        "input_tokens": 192,
+        "output_tokens": 56,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "An increase in error rate shortly after a configuration change is a classic symptom of a configuration issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03532",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [],
+          "rationale": "An alert firing during a known maintenance window, with a transient spike in a metric like error rate, is characteristic of expected system behavior during such periods."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[],\"rationale\":\"The alert is triggered by a transient, self-correcting event (maintenance window) that briefly increased the error rate, making it a false positive.\"}",
+        "latency_s": 1.2871099170006346,
+        "input_tokens": 201,
+        "output_tokens": 61,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [],
+          "rationale": "The alert is triggered by a transient, self-correcting event (maintenance window) that briefly increased the error rate, making it a false positive."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02201",
+        "gold": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "The orders service CPU is near saturation, directly correlated with a massive spike in request volume, indicating a capacity issue due to increased demand."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"capacity_saturation\",\"severity\":\"P2\",\"origin_service\":\"orders\",\"first_specialists\":[\"telemetry\"],\"rationale\":\"The orders service is experiencing high CPU utilization directly correlated with a significant increase in request rate, indicating capacity saturation.\"}",
+        "latency_s": 1.2499315419991035,
+        "input_tokens": 254,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "The orders service is experiencing high CPU utilization directly correlated with a significant increase in request rate, indicating capacity saturation."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01276",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The payments service is exhibiting a sustained and significant increase in its P99 latency over an extended period, indicating a performance regression."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P1\",\"origin_service\":\"payments\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A prolonged increase in P99 latency without recent deployments suggests a performance regression.\"}",
+        "latency_s": 1.0859530409943545,
+        "input_tokens": 160,
+        "output_tokens": 52,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A prolonged increase in P99 latency without recent deployments suggests a performance regression."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01289",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "An increase in errors from a specific upstream dependency indicates a problem with that dependency or how the calling service interacts with it."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P2\",\"origin_service\":\"payments\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The orders service is showing a high error rate when interacting with the payments service, indicating an issue with the payments dependency.\"}",
+        "latency_s": 1.2972177919946262,
+        "input_tokens": 247,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The orders service is showing a high error rate when interacting with the payments service, indicating an issue with the payments dependency."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00763",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "A significant increase in errors when calling a specific dependency indicates a problem with the dependency service itself."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P1\",\"origin_service\":\"payments\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The orders service is showing a high error rate when calling the payments service, indicating a problem with the payments dependency.\"}",
+        "latency_s": 1.2453441249963362,
+        "input_tokens": 199,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The orders service is showing a high error rate when calling the payments service, indicating a problem with the payments dependency."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03610",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High thread utilization combined with OOM/restarts indicates that threads are being consumed and not released, eventually exhausting the pool."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P1\",\"origin_service\":\"payments\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High thread utilization leading to pod restarts indicates a resource leak or excessive consumption, where threads are not being released properly.\"}",
+        "latency_s": 1.3170442079936038,
+        "input_tokens": 253,
+        "output_tokens": 61,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High thread utilization leading to pod restarts indicates a resource leak or excessive consumption, where threads are not being released properly."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02147",
+        "gold": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "High CPU utilization driven by a significant increase in request rate during a known event indicates resource saturation."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"capacity_saturation\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\"],\"rationale\":\"High CPU utilization directly correlated with a significant increase in request rate, especially during a known event, points to capacity saturation.\"}",
+        "latency_s": 1.3075492909993045,
+        "input_tokens": 258,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "High CPU utilization directly correlated with a significant increase in request rate, especially during a known event, points to capacity saturation."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02836",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "The API gateway is experiencing a moderate increase in its internal error rate, pointing to an issue within the gateway itself."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P3\",\"origin_service\":\"api-gateway\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"The API Gateway is showing an increased error rate, which is a common symptom of a failed deployment.\"}",
+        "latency_s": 1.264750832997379,
+        "input_tokens": 209,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "The API Gateway is showing an increased error rate, which is a common symptom of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02540",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "A localized synthetic probe failure, with no impact on real user traffic, is typically noise or an issue with the probe itself."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[],\"rationale\":\"A single synthetic probe failure without impact on real user traffic suggests a transient network issue or a minor probe misconfiguration, not indicative of a service outage.\"}",
+        "latency_s": 1.2829860419951729,
+        "input_tokens": 200,
+        "output_tokens": 61,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "A single synthetic probe failure without impact on real user traffic suggests a transient network issue or a minor probe misconfiguration, not indicative of a service outage."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00061",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P2",
+          "origin_service": "external",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "An increased error rate on calls to a specific external dependency indicates a problem with that dependency or the connection to it."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P2\",\"origin_service\":\"external\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The user-auth service is experiencing a higher error rate when calling the identity-provider, indicating an issue with the identity-provider or the integration with it.\"}",
+        "latency_s": 1.3642824579947046,
+        "input_tokens": 213,
+        "output_tokens": 65,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P2",
+          "origin_service": "external",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The user-auth service is experiencing a higher error rate when calling the identity-provider, indicating an issue with the identity-provider or the integration with it."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02234",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "Persistent high memory utilization without OOMs suggests a slow memory leak that is not yet critical but trending upwards."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High memory utilization without OOMs suggests a gradual increase in memory usage, potentially due to inefficient memory allocation or a memory leak.\"}",
+        "latency_s": 1.3235685420004302,
+        "input_tokens": 203,
+        "output_tokens": 63,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High memory utilization without OOMs suggests a gradual increase in memory usage, potentially due to inefficient memory allocation or a memory leak."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03152",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "An elevated error rate immediately following a deployment often indicates a problem introduced by the new version of the notifications service."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"The notifications service is showing a substantial increase in its error rate, indicating a problem with the service itself.\"}",
+        "latency_s": 1.245862625000882,
+        "input_tokens": 209,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "The notifications service is showing a substantial increase in its error rate, indicating a problem with the service itself."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01223",
+        "gold": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "Increased request rate directly causing higher CPU utilization points to the service struggling to handle the incoming load."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"capacity_saturation\",\"severity\":\"P2\",\"origin_service\":\"payments\",\"first_specialists\":[\"telemetry\"],\"rationale\":\"The payments service is experiencing high CPU utilization directly correlated with a significant increase in request rate, indicating capacity saturation.\"}",
+        "latency_s": 1.2113407500000903,
+        "input_tokens": 197,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "The payments service is experiencing high CPU utilization directly correlated with a significant increase in request rate, indicating capacity saturation."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03466",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [],
+          "rationale": "A single data point breach at low traffic, quickly followed by normal values, suggests a transient issue or monitoring noise rather than a systemic problem."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"api-gateway\",\"first_specialists\":[],\"rationale\":\"The alert is triggered by a single data point spike during low traffic, which is characteristic of transient network issues or a single, isolated incident.\"}",
+        "latency_s": 1.3490814589968068,
+        "input_tokens": 272,
+        "output_tokens": 61,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [],
+          "rationale": "The alert is triggered by a single data point spike during low traffic, which is characteristic of transient network issues or a single, isolated incident."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03287",
+        "gold": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "The API Gateway is experiencing high CPU utilization due to an expected, but significant, surge in request volume, indicating capacity saturation under load."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"capacity_saturation\",\"severity\":\"P1\",\"origin_service\":\"api-gateway\",\"first_specialists\":[\"telemetry\"],\"rationale\":\"The API Gateway is experiencing high CPU utilization directly correlated with a significant increase in request rate, indicating it is struggling to handle the increased load.\"}",
+        "latency_s": 1.3171540839975933,
+        "input_tokens": 153,
+        "output_tokens": 65,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "The API Gateway is experiencing high CPU utilization directly correlated with a significant increase in request rate, indicating it is struggling to handle the increased load."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01475",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "A drastically elevated error rate (47.7%) from the API Gateway when calling the orders service indicates a severe problem with the orders service's availability or functionality."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P1\",\"origin_service\":\"orders\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"A high error rate from the api-gateway to orders service points to a problem with the orders service itself, as it is the dependency.\"}",
+        "latency_s": 1.3464953750008135,
+        "input_tokens": 217,
+        "output_tokens": 64,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "A high error rate from the api-gateway to orders service points to a problem with the orders service itself, as it is the dependency."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00259",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "A high error rate when calling a specific dependency strongly suggests a problem with that dependency."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P1\",\"origin_service\":\"orders\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The API Gateway is showing a high error rate when interacting with the orders service, indicating a problem with the orders dependency.\"}",
+        "latency_s": 1.2679710409938707,
+        "input_tokens": 202,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The API Gateway is showing a high error rate when interacting with the orders service, indicating a problem with the orders dependency."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03087",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A slow, prolonged increase in P99 latency, without a corresponding deployment, indicates a gradual performance degradation or resource exhaustion over time rather than an immediate change."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P1\",\"origin_service\":\"payments\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A prolonged and significant increase in P99 latency indicates a performance regression within the payments service.\"}",
+        "latency_s": 1.165245459000289,
+        "input_tokens": 190,
+        "output_tokens": 55,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A prolonged and significant increase in P99 latency indicates a performance regression within the payments service."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00705",
+        "gold": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A non-deployment configuration change in the payments service is causing an elevated error rate, likely due to a misconfiguration."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"config_change\",\"severity\":\"P2\",\"origin_service\":\"payments\",\"first_specialists\":[\"deployment\",\"knowledge\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue.\"}",
+        "latency_s": 1.2378535410025506,
+        "input_tokens": 232,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00755",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a service's own deployment strongly indicates a problem with the new version."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P1\",\"origin_service\":\"user-auth\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and substantial increase in error rate immediately following a deployment is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.3289883749966975,
+        "input_tokens": 276,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and substantial increase in error rate immediately following a deployment is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00496",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The notifications service is showing high database connection utilization, indicating a potential resource leak where connections are not being released properly, leading to saturation."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High database connection utilization without OOMs or restarts suggests a potential resource leak or increased demand.\"}",
+        "latency_s": 1.2217454170022393,
+        "input_tokens": 213,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High database connection utilization without OOMs or restarts suggests a potential resource leak or increased demand."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03038",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [],
+          "rationale": "An alert firing during a maintenance window is often expected behavior due to planned disruptions, indicating it's likely noise."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"orders\",\"first_specialists\":[],\"rationale\":\"The alert fired during a maintenance window, indicating it is expected and not a true incident.\"}",
+        "latency_s": 1.0354130409978097,
+        "input_tokens": 146,
+        "output_tokens": 49,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [],
+          "rationale": "The alert fired during a maintenance window, indicating it is expected and not a true incident."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00617",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P1",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High thread utilization combined with restarts suggests a resource leak, specifically in threads."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P2\",\"origin_service\":\"user-auth\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High thread utilization combined with OOMs and restarts points to a resource leak or inefficient thread management.\"}",
+        "latency_s": 1.2539075419990695,
+        "input_tokens": 208,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High thread utilization combined with OOMs and restarts points to a resource leak or inefficient thread management."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00861",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The orders service is reporting high errors specifically when interacting with the notifications service, indicating a problem with the latter."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P1\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The orders service is experiencing a high error rate specifically when calling the notifications service, indicating a problem with the notifications dependency.\"}",
+        "latency_s": 1.2659107080035028,
+        "input_tokens": 195,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The orders service is experiencing a high error rate specifically when calling the notifications service, indicating a problem with the notifications dependency."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00626",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A recent deployment to the orders service correlates with a significant spike in its overall error rate, indicating a failed deployment."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P1\",\"origin_service\":\"orders\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a deployment is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.2304865420010174,
+        "input_tokens": 203,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a deployment is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00520",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "An alert triggered by a metrics scrape gap is a false positive, as the underlying service behavior is normal; the data collection itself was faulty."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[],\"rationale\":\"The alert is triggered by a metrics scrape gap, which is a known source of false positives, indicating the error rate is artificially high.\"}",
+        "latency_s": 1.1946088339973358,
+        "input_tokens": 150,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "The alert is triggered by a metrics scrape gap, which is a known source of false positives, indicating the error rate is artificially high."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00392",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High database connection utilization without OOMs or restarts can indicate a resource leak, where connections are opened but not properly closed, leading to gradual exhaustion."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P3\",\"origin_service\":\"orders\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"The orders service is showing high database connection utilization, indicating a potential resource leak or increased demand.\"}",
+        "latency_s": 1.2124880839983234,
+        "input_tokens": 232,
+        "output_tokens": 56,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The orders service is showing high database connection utilization, indicating a potential resource leak or increased demand."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03020",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual increase in P99 latency over an extended period, without recent deployments, is characteristic of a latency regression."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A gradual, prolonged increase in P99 latency over many hours indicates a performance regression or resource saturation.\"}",
+        "latency_s": 1.1779138749989215,
+        "input_tokens": 152,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual, prolonged increase in P99 latency over many hours indicates a performance regression or resource saturation."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00897",
+        "gold": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A significant, sustained increase in error rate shortly after a configuration update (rate limit change) suggests a configuration-related issue."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"config_change\",\"severity\":\"P2\",\"origin_service\":\"payments\",\"first_specialists\":[\"deployment\",\"knowledge\"],\"rationale\":\"A sudden and significant increase in error rate shortly after a configuration change is a strong indicator of a configuration issue.\"}",
+        "latency_s": 1.2035217500015278,
+        "input_tokens": 197,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A sudden and significant increase in error rate shortly after a configuration change is a strong indicator of a configuration issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02440",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "Sustained high thread utilization coupled with OOM events and restarts points to a resource leak where threads are not being properly released."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P1\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High thread utilization combined with OOMs or restarts suggests a resource leak or excessive consumption, leading to system instability.\"}",
+        "latency_s": 1.2938994170035585,
+        "input_tokens": 220,
+        "output_tokens": 61,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P1",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High thread utilization combined with OOMs or restarts suggests a resource leak or excessive consumption, leading to system instability."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03355",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual, sustained increase in P99 latency without a sudden spike points towards a systemic performance degradation rather than an acute failure."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P1\",\"origin_service\":\"api-gateway\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A gradual, sustained increase in P99 latency over many hours is a classic symptom of a performance regression.\"}",
+        "latency_s": 1.3564893750008196,
+        "input_tokens": 291,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual, sustained increase in P99 latency over many hours is a classic symptom of a performance regression."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00943",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High database connection utilization without OOMs suggests a resource leak or increased demand, not immediately critical but should be investigated before it escalates."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P3\",\"origin_service\":\"user-auth\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High database connection utilization without OOMs or restarts suggests a potential resource leak or inefficient connection management.\"}",
+        "latency_s": 1.3258285830015666,
+        "input_tokens": 279,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High database connection utilization without OOMs or restarts suggests a potential resource leak or inefficient connection management."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02561",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The API Gateway is exhibiting symptoms of a resource leak, specifically open file descriptors, leading to exhaustion and restarts."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P1\",\"origin_service\":\"api-gateway\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"The api-gateway is experiencing high resource utilization and frequent restarts, suggesting a resource leak or exhaustion.\"}",
+        "latency_s": 1.3993214590009302,
+        "input_tokens": 344,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The api-gateway is experiencing high resource utilization and frequent restarts, suggesting a resource leak or exhaustion."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00738",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "Notifications service P99 latency has significantly increased over an extended period, indicating a performance regression."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A prolonged and significant increase in P99 latency over an extended period points to a performance regression within the service.\"}",
+        "latency_s": 1.201394875002734,
+        "input_tokens": 160,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A prolonged and significant increase in P99 latency over an extended period points to a performance regression within the service."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02076",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [],
+          "rationale": "The observed error rate spike on the API Gateway was an artifact of a monitoring system scrape issue, not an actual service problem."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"api-gateway\",\"first_specialists\":[],\"rationale\":\"The alert is triggered by a metrics scrape issue, not an actual service problem, indicating a monitoring artifact rather than a service issue.\"}",
+        "latency_s": 1.2564553749980405,
+        "input_tokens": 215,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [],
+          "rationale": "The alert is triggered by a metrics scrape issue, not an actual service problem, indicating a monitoring artifact rather than a service issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01513",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The steady increase in open file descriptor usage leading to exhaustion and service restarts points to a resource leak."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P1\",\"origin_service\":\"payments\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High utilization of a critical resource like file descriptors, combined with frequent restarts, points to a resource leak or exhaustion.\"}",
+        "latency_s": 1.3607784999985597,
+        "input_tokens": 273,
+        "output_tokens": 61,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High utilization of a critical resource like file descriptors, combined with frequent restarts, points to a resource leak or exhaustion."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00534",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "High error rates when calling a specific dependency indicate an issue with that dependency or the integration."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P1\",\"origin_service\":\"payments\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The orders service is showing a high error rate specifically when interacting with the payments service, indicating a problem with the payments dependency.\"}",
+        "latency_s": 1.2852064160033478,
+        "input_tokens": 208,
+        "output_tokens": 61,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The orders service is showing a high error rate specifically when interacting with the payments service, indicating a problem with the payments dependency."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01379",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A moderate increase in error rate after a deployment, even if not extremely high, suggests a potential issue introduced by the change."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P3\",\"origin_service\":\"orders\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"An increase in error rate shortly after a deployment to the same service is a classic symptom of a failed deployment.\"}",
+        "latency_s": 1.344337333997828,
+        "input_tokens": 315,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "An increase in error rate shortly after a deployment to the same service is a classic symptom of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00186",
+        "gold": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A noticeable but not severe increase in the error rate after a configuration change suggests a potential misconfiguration or incompatibility."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"An elevated error rate shortly after a deployment is a common symptom of a failed deployment.\"}",
+        "latency_s": 1.2456987080004183,
+        "input_tokens": 299,
+        "output_tokens": 54,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "An elevated error rate shortly after a deployment is a common symptom of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03271",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [],
+          "rationale": "A short, self-resolving spike without sustained impact is typically a transient network blip or a brief burst of traffic that the system handled."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[],\"rationale\":\"A very short-lived spike that quickly resolved itself is often indicative of a transient network blip or a single, isolated incident.\"}",
+        "latency_s": 1.1458149589961977,
+        "input_tokens": 138,
+        "output_tokens": 56,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [],
+          "rationale": "A very short-lived spike that quickly resolved itself is often indicative of a transient network blip or a single, isolated incident."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00685",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and substantial increase in error rate immediately following a service deployment strongly suggests a deployment failure introduced a bug or misconfiguration."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"orders\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a deployment is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.302891291998094,
+        "input_tokens": 283,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a deployment is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03517",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A sustained increase in P99 latency over several hours indicates a latency regression."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A gradual increase in p99 latency over several hours indicates a performance regression.\"}",
+        "latency_s": 1.1179175420038518,
+        "input_tokens": 195,
+        "output_tokens": 52,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual increase in p99 latency over several hours indicates a performance regression."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00132",
+        "gold": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A recent configuration change to the payments service, specifically an updated rate limit, is the direct cause of the observed increase in error rates."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"config_change\",\"severity\":\"P1\",\"origin_service\":\"payments\",\"first_specialists\":[\"deployment\",\"knowledge\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue.\"}",
+        "latency_s": 1.235708624997642,
+        "input_tokens": 230,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01101",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "A single data point breach at low traffic, quickly resolving, is typical of an intermittent monitoring blip or noise rather than a sustained issue."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[],\"rationale\":\"A single data point breach during low traffic, followed by normal behavior, is characteristic of transient network issues or a single, isolated data point anomaly.\"}",
+        "latency_s": 1.2451368750043912,
+        "input_tokens": 184,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "A single data point breach during low traffic, followed by normal behavior, is characteristic of transient network issues or a single, isolated data point anomaly."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02091",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High thread utilization can indicate a resource leak, inefficient code, or insufficient thread pool configuration, even without immediate crashes."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High thread utilization without OOMs or restarts suggests a resource leak, where threads are being created but not properly released.\"}",
+        "latency_s": 1.3002819160028594,
+        "input_tokens": 201,
+        "output_tokens": 62,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High thread utilization without OOMs or restarts suggests a resource leak, where threads are being created but not properly released."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00928",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden increase in error rate immediately following a service deployment is a classic symptom of a failed deployment."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"orders\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"The orders service is showing a higher error rate, which often correlates with a recent deployment to the service itself.\"}",
+        "latency_s": 1.2660666660012794,
+        "input_tokens": 214,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "The orders service is showing a higher error rate, which often correlates with a recent deployment to the service itself."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01104",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "A modest but persistent increase in error rate when calling a dependency points to a potential intermittent issue or degraded state in the dependency."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The orders service is experiencing a small but noticeable increase in its error rate when interacting with the notifications service, suggesting an issue with the notifications dependency.\"}",
+        "latency_s": 1.3841525409952737,
+        "input_tokens": 254,
+        "output_tokens": 65,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The orders service is experiencing a small but noticeable increase in its error rate when interacting with the notifications service, suggesting an issue with the notifications dependency."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01121",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A significant jump in the notifications service's error rate shortly after its own deployment is characteristic of a failed deployment."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A significant increase in error rate shortly after a service's own deployment is a strong indicator of a problem introduced by the new version.\"}",
+        "latency_s": 1.4348108750054962,
+        "input_tokens": 328,
+        "output_tokens": 63,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A significant increase in error rate shortly after a service's own deployment is a strong indicator of a problem introduced by the new version."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00869",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [],
+          "rationale": "The alert is triggered by a metrics scrape gap, causing an artificial spike in the rate calculation, rather than a genuine service issue."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[],\"rationale\":\"The alert is a blip caused by a metrics scrape gap, not a sustained issue.\"}",
+        "latency_s": 1.099492833003751,
+        "input_tokens": 254,
+        "output_tokens": 49,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [],
+          "rationale": "The alert is a blip caused by a metrics scrape gap, not a sustained issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00315",
+        "gold": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "The orders service is reporting a very high error rate, indicating a severe internal problem."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"config_change\",\"severity\":\"P1\",\"origin_service\":\"orders\",\"first_specialists\":[\"deployment\",\"knowledge\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue.\"}",
+        "latency_s": 1.219075041000906,
+        "input_tokens": 193,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02689",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The notifications service itself is showing a sustained increase in its P99 latency, suggesting a performance degradation within the service."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A sustained increase in P99 latency over several hours indicates a performance regression within the service.\"}",
+        "latency_s": 1.2132482090019039,
+        "input_tokens": 252,
+        "output_tokens": 55,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A sustained increase in P99 latency over several hours indicates a performance regression within the service."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01149",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "An elevated error rate for a service when interacting with a specific dependency indicates a problem with that dependency or the integration with it."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The orders service is experiencing a small but noticeable increase in its own error rate when calling the notifications service, indicating a potential issue with the notifications dependency.\"}",
+        "latency_s": 1.347236832996714,
+        "input_tokens": 192,
+        "output_tokens": 66,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The orders service is experiencing a small but noticeable increase in its own error rate when calling the notifications service, indicating a potential issue with the notifications dependency."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02507",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "Sustained high resource utilization coupled with OOM errors or frequent restarts is a classic symptom of a resource leak."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P2\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High thread utilization combined with OOM/restarts points to a resource leak or excessive thread creation that is consuming all available threads.\"}",
+        "latency_s": 1.321540165998158,
+        "input_tokens": 239,
+        "output_tokens": 62,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High thread utilization combined with OOM/restarts points to a resource leak or excessive thread creation that is consuming all available threads."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02109",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and high error rate immediately following a deployment indicates a likely issue introduced by the new version of the api-gateway service."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P1\",\"origin_service\":\"api-gateway\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a deployment to the service itself is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.3576749170024414,
+        "input_tokens": 231,
+        "output_tokens": 64,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a deployment to the service itself is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00039",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "The orders service is showing a sudden increase in its internal error rate, pointing to a functional problem within the service."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"orders\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate shortly after a deployment is a classic symptom of a failed deployment.\"}",
+        "latency_s": 1.3607503329985775,
+        "input_tokens": 349,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate shortly after a deployment is a classic symptom of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01822",
+        "gold": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A dramatic and immediate spike in error rate after a configuration change strongly suggests the change introduced a critical issue, likely related to resource availability or connectivity."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"config_change\",\"severity\":\"P1\",\"origin_service\":\"orders\",\"first_specialists\":[\"deployment\",\"knowledge\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue.\"}",
+        "latency_s": 1.1970125830048346,
+        "input_tokens": 186,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00862",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A recent deployment to the user-auth service appears to have introduced a bug causing a significant spike in its internal error rate."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P1\",\"origin_service\":\"user-auth\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a deployment to the same service strongly suggests a failed deployment.\"}",
+        "latency_s": 1.2904380000036326,
+        "input_tokens": 237,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a deployment to the same service strongly suggests a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00090",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sharp rise in the error rate immediately following a service's own deployment is a classic symptom of a failed deployment, where the new version introduces a bug or incompatibility."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"api-gateway\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a deployment to the same service is a classic symptom of a failed deployment.\"}",
+        "latency_s": 1.4490417499982868,
+        "input_tokens": 322,
+        "output_tokens": 64,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a deployment to the same service is a classic symptom of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01008",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A recent deployment to the notifications service 8 minutes ago likely introduced a change that caused the increase in errors."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P1\",\"origin_service\":\"notifications\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a deployment is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.287969292003254,
+        "input_tokens": 259,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a deployment is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01970",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The api-gateway service is experiencing an elevated error rate when calling the orders dependency, indicating a problem with the orders service or the connection to it."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P1\",\"origin_service\":\"orders\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"The API Gateway is showing a high error rate when calling the orders service, indicating a problem with the orders service itself or the communication path.\"}",
+        "latency_s": 1.3432065000015427,
+        "input_tokens": 206,
+        "output_tokens": 64,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P1",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "The API Gateway is showing a high error rate when calling the orders service, indicating a problem with the orders service itself or the communication path."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00352",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual, sustained increase in P99 latency over a long period points to a performance regression within the service itself."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P1\",\"origin_service\":\"api-gateway\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A gradual, prolonged increase in p99 latency over many hours is a classic symptom of a performance regression.\"}",
+        "latency_s": 1.3626054999986081,
+        "input_tokens": 313,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P1",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual, prolonged increase in p99 latency over many hours is a classic symptom of a performance regression."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03663",
+        "gold": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P2",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A substantial and rapid increase in the error rate points to an internal issue within the inventory service, potentially due to a recent configuration update or feature flag rollout."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"config_change\",\"severity\":\"P1\",\"origin_service\":\"inventory\",\"first_specialists\":[\"deployment\",\"knowledge\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue.\"}",
+        "latency_s": 1.3102040000012494,
+        "input_tokens": 304,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P1",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a configuration change is a strong indicator of a configuration issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00453",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A sustained increase in P99 latency over a long period suggests a performance degradation within the service itself, potentially due to resource contention or inefficient processing."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A gradual, sustained increase in P99 latency over a long period indicates a performance regression or resource saturation.\"}",
+        "latency_s": 1.3304825829982292,
+        "input_tokens": 314,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual, sustained increase in P99 latency over a long period indicates a performance regression or resource saturation."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00393",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A sustained increase in P99 latency over several hours indicates a performance regression specific to the inventory service."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A prolonged and significant increase in P99 latency without a recent deployment suggests a performance regression or resource saturation.\"}",
+        "latency_s": 1.2681975000014063,
+        "input_tokens": 249,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A prolonged and significant increase in P99 latency without a recent deployment suggests a performance regression or resource saturation."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00139",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A substantial and sustained increase in P99 latency for the inventory service suggests a performance bottleneck or slow operation affecting a significant portion of requests."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A sustained, long-term increase in P99 latency indicates a performance regression within the service.\"}",
+        "latency_s": 1.153110832994571,
+        "input_tokens": 192,
+        "output_tokens": 55,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A sustained, long-term increase in P99 latency indicates a performance regression within the service."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T03771",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "payments",
+          "first_specialists": [],
+          "rationale": "The alert is flapping, indicating that the condition is not sustained and is likely a transient issue or misconfigured threshold rather than a persistent problem."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"payments\",\"first_specialists\":[],\"rationale\":\"The alert is flapping, indicating a transient issue that is not persistent.\"}",
+        "latency_s": 1.0917884169975878,
+        "input_tokens": 276,
+        "output_tokens": 46,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "payments",
+          "first_specialists": [],
+          "rationale": "The alert is flapping, indicating a transient issue that is not persistent."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00138",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [],
+          "rationale": "Frequent firing and clearing of an alert without sustained impact indicates instability in the alerting condition or metric, often due to noise."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"orders\",\"first_specialists\":[],\"rationale\":\"Frequent firing and clearing of an alert without sustained impact suggests an alert threshold that is too sensitive or a transient issue.\"}",
+        "latency_s": 1.130637458001729,
+        "input_tokens": 150,
+        "output_tokens": 55,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [],
+          "rationale": "Frequent firing and clearing of an alert without sustained impact suggests an alert threshold that is too sensitive or a transient issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02489",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [],
+          "rationale": "The spike self-resolved quickly, suggesting a transient issue or normal system fluctuation rather than a sustained problem."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"orders\",\"first_specialists\":[],\"rationale\":\"A very short-lived spike that quickly resolved is often a transient issue or a blip, not indicative of a sustained problem.\"}",
+        "latency_s": 1.172560582999722,
+        "input_tokens": 186,
+        "output_tokens": 56,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [],
+          "rationale": "A very short-lived spike that quickly resolved is often a transient issue or a blip, not indicative of a sustained problem."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00333",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The inventory service's P99 latency has been steadily rising for several hours, indicating a performance regression not linked to any recent deployments in its own service or immediate dependencies."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A gradual, sustained increase in P99 latency over several hours indicates a performance regression or resource contention.\"}",
+        "latency_s": 1.2383093329990515,
+        "input_tokens": 238,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual, sustained increase in P99 latency over several hours indicates a performance regression or resource contention."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01169",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A recent deployment to the payments service appears to be causing an increase in errors."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P1\",\"origin_service\":\"payments\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a deployment is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.3444454580021556,
+        "input_tokens": 325,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "payments",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a deployment is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00454",
+        "gold": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "An increased error rate originating from the orders service when it specifically calls the inventory service, without recent deployments in orders, indicates a problem with the inventory dependency."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"dependency_failure\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"knowledge\"],\"rationale\":\"An increase in error rate when calling a specific dependency indicates an issue with that dependency or the integration with it.\"}",
+        "latency_s": 1.2826514170010341,
+        "input_tokens": 264,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "dependency_failure",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "knowledge"
+          ],
+          "rationale": "An increase in error rate when calling a specific dependency indicates an issue with that dependency or the integration with it."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01315",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "The elevated error rate on the API gateway, immediately after a deployment to the same service, points to the deployment as the likely cause."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P3\",\"origin_service\":\"api-gateway\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"An elevated error rate on the API Gateway itself, without a recent deployment to the gateway, suggests a problem within the gateway's internal processing or configuration.\"}",
+        "latency_s": 1.435705792006047,
+        "input_tokens": 219,
+        "output_tokens": 69,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "api-gateway",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "An elevated error rate on the API Gateway itself, without a recent deployment to the gateway, suggests a problem within the gateway's internal processing or configuration."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01727",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "user-auth",
+          "first_specialists": [],
+          "rationale": "The symptom is an elevated error rate, which is expected and benign because it occurred during a scheduled maintenance window."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"user-auth\",\"first_specialists\":[],\"rationale\":\"The alert fired during a maintenance window, indicating it is likely a false positive or a transient issue.\"}",
+        "latency_s": 1.1117113329964923,
+        "input_tokens": 182,
+        "output_tokens": 52,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "user-auth",
+          "first_specialists": [],
+          "rationale": "The alert fired during a maintenance window, indicating it is likely a false positive or a transient issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01071",
+        "gold": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "Elevated CPU usage directly proportional to a significant traffic increase indicates the service is nearing its capacity limits under the increased load."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"capacity_saturation\",\"severity\":\"P2\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\"],\"rationale\":\"The inventory service is experiencing high CPU utilization due to a significant increase in request rate, which is likely causing saturation.\"}",
+        "latency_s": 1.2921436670003459,
+        "input_tokens": 272,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P2",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "The inventory service is experiencing high CPU utilization due to a significant increase in request rate, which is likely causing saturation."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01014",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "user-auth",
+          "first_specialists": [],
+          "rationale": "A transient spike in a metric without corresponding changes in other system metrics or user-facing symptoms suggests a monitoring anomaly rather than a real incident."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"user-auth\",\"first_specialists\":[],\"rationale\":\"The alert is triggered by a known issue with the metrics collection method (scrape gap) rather than an actual service issue.\"}",
+        "latency_s": 1.2765541249973467,
+        "input_tokens": 270,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "user-auth",
+          "first_specialists": [],
+          "rationale": "The alert is triggered by a known issue with the metrics collection method (scrape gap) rather than an actual service issue."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02903",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The inventory service is showing high utilization of database connections, indicating a potential resource constraint or leak within the service itself."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"The inventory service is showing high database connection utilization, suggesting a potential resource leak or increased demand.\"}",
+        "latency_s": 1.2738325419995817,
+        "input_tokens": 291,
+        "output_tokens": 56,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "The inventory service is showing high database connection utilization, suggesting a potential resource leak or increased demand."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01568",
+        "gold": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High resource utilization, even without immediate impact, can indicate a slow resource leak or increased demand, and warrants investigation before saturation."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"resource_leak\",\"severity\":\"P3\",\"origin_service\":\"user-auth\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"High database connection utilization without OOMs or restarts suggests a potential resource leak or inefficient connection management.\"}",
+        "latency_s": 1.2682502079987898,
+        "input_tokens": 229,
+        "output_tokens": 59,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "resource_leak",
+          "severity": "P3",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "High database connection utilization without OOMs or restarts suggests a potential resource leak or inefficient connection management."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01451",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden spike in error rate following a recent deployment to the same service strongly implicates the deployment as the cause."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P3\",\"origin_service\":\"notifications\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate shortly after a deployment is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.26559350000025,
+        "input_tokens": 244,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P3",
+          "origin_service": "notifications",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate shortly after a deployment is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00789",
+        "gold": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P3",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "Both increased request rate and elevated CPU usage point to the service processing more traffic, leading to higher resource consumption."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"capacity_saturation\",\"severity\":\"P2\",\"origin_service\":\"orders\",\"first_specialists\":[\"telemetry\"],\"rationale\":\"The orders service is showing high CPU utilization and a significantly increased request rate, indicating it is struggling to handle the increased load.\"}",
+        "latency_s": 1.297207083000103,
+        "input_tokens": 256,
+        "output_tokens": 60,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "capacity_saturation",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry"
+          ],
+          "rationale": "The orders service is showing high CPU utilization and a significantly increased request rate, indicating it is struggling to handle the increased load."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T01483",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual increase in P99 latency over an extended period is a classic symptom of a performance regression."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P2\",\"origin_service\":\"orders\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A gradual, sustained increase in P99 latency over a long period indicates a performance regression.\"}",
+        "latency_s": 1.130546084001253,
+        "input_tokens": 150,
+        "output_tokens": 55,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "orders",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A gradual, sustained increase in P99 latency over a long period indicates a performance regression."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00087",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A recent deployment to the inventory service caused a sharp and high increase in errors, indicating a failed deployment."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P1\",\"origin_service\":\"inventory\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A substantial and immediate increase in error rate following a deployment strongly suggests a regression introduced by the new version.\"}",
+        "latency_s": 1.2356443329990725,
+        "input_tokens": 214,
+        "output_tokens": 58,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A substantial and immediate increase in error rate following a deployment strongly suggests a regression introduced by the new version."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02203",
+        "gold": {
+          "investigate": true,
+          "failure_family": "config_change",
+          "severity": "P1",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "deployment",
+            "knowledge"
+          ],
+          "rationale": "The user-auth service is experiencing a sudden and significant increase in its own error rate, which is a common symptom of a recent configuration change or deployment issue."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P2\",\"origin_service\":\"user-auth\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate shortly after a deployment to the same service is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.4142896670018672,
+        "input_tokens": 307,
+        "output_tokens": 63,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "user-auth",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate shortly after a deployment to the same service is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02738",
+        "gold": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P2",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "The drastic increase in the inventory service's error rate shortly after its own deployment strongly suggests a problem introduced by the new code."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"failed_deployment\",\"severity\":\"P1\",\"origin_service\":\"inventory\",\"first_specialists\":[\"deployment\",\"telemetry\"],\"rationale\":\"A sudden and significant increase in error rate immediately following a deployment to the same service is a strong indicator of a failed deployment.\"}",
+        "latency_s": 1.3531415420002304,
+        "input_tokens": 258,
+        "output_tokens": 62,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "failed_deployment",
+          "severity": "P1",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "deployment",
+            "telemetry"
+          ],
+          "rationale": "A sudden and significant increase in error rate immediately following a deployment to the same service is a strong indicator of a failed deployment."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T02023",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "An alert firing during a known maintenance window is expected behavior and typically not indicative of a true incident."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[],\"rationale\":\"The alert fired during a scheduled maintenance window, indicating it is expected and not a true incident.\"}",
+        "latency_s": 1.0354927080043126,
+        "input_tokens": 129,
+        "output_tokens": 50,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "The alert fired during a scheduled maintenance window, indicating it is expected and not a true incident."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00781",
+        "gold": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "The alert is caused by an infrastructure issue (metrics scrape gap) rather than an actual service problem, leading to a misleading error rate calculation."
+        },
+        "text": "{\"investigate\":false,\"failure_family\":\"noise\",\"severity\":\"P3\",\"origin_service\":\"inventory\",\"first_specialists\":[],\"rationale\":\"The alert is triggered by a metrics scrape issue, which is a known source of false positives, not an actual service problem.\"}",
+        "latency_s": 1.1853342920003342,
+        "input_tokens": 200,
+        "output_tokens": 56,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": false,
+          "failure_family": "noise",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [],
+          "rationale": "The alert is triggered by a metrics scrape issue, which is a known source of false positives, not an actual service problem."
+        },
+        "status": "ok"
+      },
+      {
+        "id": "T00918",
+        "gold": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P3",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A prolonged and significant increase in P99 latency over many hours indicates a deep-seated performance regression or accumulating resource issue."
+        },
+        "text": "{\"investigate\":true,\"failure_family\":\"latency_regression\",\"severity\":\"P2\",\"origin_service\":\"inventory\",\"first_specialists\":[\"telemetry\",\"deployment\"],\"rationale\":\"A sustained increase in P99 latency over an extended period indicates a performance regression within the service itself.\"}",
+        "latency_s": 1.2929512080008863,
+        "input_tokens": 299,
+        "output_tokens": 57,
+        "thinking_tokens": 0,
+        "parsed": {
+          "investigate": true,
+          "failure_family": "latency_regression",
+          "severity": "P2",
+          "origin_service": "inventory",
+          "first_specialists": [
+            "telemetry",
+            "deployment"
+          ],
+          "rationale": "A sustained increase in P99 latency over an extended period indicates a performance regression within the service itself."
+        },
+        "status": "ok"
+      }
+    ]
+  }
+}

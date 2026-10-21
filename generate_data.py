@@ -24,7 +24,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from scenarios import sample_specs
-from schema import make_label
+from schema import SERVICES, make_label
 from teachers import make_client
 
 WRITER_SYSTEM = """You write realistic production monitoring alerts for Orion Commerce, a 6-service e-commerce platform (api-gateway, orders, payments, inventory, notifications, user-auth).
@@ -92,6 +92,7 @@ def build_record(spec: dict, item: dict) -> dict:
     alert = {
         "alert_name": item["alert_name"],
         "service_name": spec["service"],
+        "service_tier": "critical" if SERVICES[spec["service"]]["critical"] else "non-critical",
         "onset_timestamp": spec["onset_timestamp"],
         "description": item["description"],
         "alert_metadata": item["alert_metadata"],
