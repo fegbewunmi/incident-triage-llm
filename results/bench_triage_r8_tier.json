@@ -1,0 +1,23 @@
+{
+  "run_name": "triage_r8_tier",
+  "device": "mps",
+  "dtype": "torch.bfloat16",
+  "new_tokens": 96,
+  "base": {
+    "median_latency_s": 1.968,
+    "median_decode_tok_per_s": 48.8,
+    "memory_gb": 3.28
+  },
+  "lora_unmerged": {
+    "median_latency_s": 2.085,
+    "median_decode_tok_per_s": 46.1,
+    "memory_gb": 3.3
+  },
+  "lora_merged": {
+    "median_latency_s": 1.956,
+    "median_decode_tok_per_s": 49.1,
+    "memory_gb": 3.3
+  },
+  "merged_dir": "merged/triage_r8_tier",
+  "merge_speedup_pct": 6.2
+}

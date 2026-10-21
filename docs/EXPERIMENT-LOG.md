@@ -207,7 +207,17 @@ impact bands for every evidence type (error rate, latency multiple,
 resource utilization, traffic multiple). The fine-tuned model uses its
 one-line prompt, so this doesn't touch it.
 
-**Result.** *Pending.* It's rerun as part of the evaluation in entry 9.
+**Result.** Rerun together with entry 9's change, so both models saw the exact
+bands *and* the service tier:
+
+| model | severity before | severity after |
+|---|---|---|
+| Gemini 2.5 Flash | 54% | 70% |
+| Gemini 2.5 Flash + thinking | 69% | 96% |
+
+The two changes landed in the same run, so this measures their combined
+effect on Gemini, not the bands alone. Either way, Gemini's earlier 54% was
+partly a prompt problem, which is exactly why the rerun mattered.
 
 **Takeaway.** A baseline only means something if it gets the same information
 your model was trained on. Otherwise the comparison measures the prompt, not
@@ -246,13 +256,68 @@ half did.
   look this up in the services table before calling the model, so this is
   information the real system has. Labels and the gold review are unchanged.
 - `generate_data.py`: new alerts include the tier.
-- Retraining as `triage_r8_tier` with identical settings.
+- Retrained as `triage_r8_tier` with identical settings.
 
-**Result.** *Pending.*
+**Result.**
+
+| fine-tuned model | family acc | severity acc | all 3 right |
+|---|---|---|---|
+| without tier (`triage_r8_clean`) | 97% | 79% | 77% |
+| with tier (`triage_r8_tier`) | 96% | 87% | 84% |
+
+Severity rose 8 points and "all 3 right" rose 7, with family accuracy
+unchanged within noise. 13 severity errors remain.
 
 **Takeaway.** Before tuning hyperparameters or adding data, look at the
 mistakes. If they cluster, the model is often missing information, and the
 fix is in the input, not the training.
+
+---
+
+## 10. Final comparison
+
+On 100 hand-reviewed gold alerts (`triage_r8_tier`; every model sees the
+service tier, and the baselines get the exact impact bands):
+
+| model | valid JSON | family acc | severity acc | origin acc | all 3 right | incidents missed | median latency | prompt tokens | $ / 1k alerts |
+|---|---|---|---|---|---|---|---|---|---|
+| Llama 3.2 1B, untuned, rules prompt | 8% | 4% | 3% | 7% | 1% | 8/81 | 2.21 s | 957 | $0 |
+| Llama 3.2 1B, untuned, rules + 3 examples | 93% | 53% | 38% | 87% | 26% | 15/81 | 2.62 s | 1,534 | $0 |
+| **Llama 3.2 1B, fine-tuned** | **100%** | **96%** | **87%** | **100%** | **84%** | **0/81** | **1.30 s** | **240** | **$0** |
+| Gemini 2.5 Flash | 100% | 98% | 70% | 99% | 68% | 2/81 | 1.25 s | 1,002 | $0.48 |
+| Gemini 2.5 Flash + thinking | 99% | 99% | 96% | 99% | 96% | 0/81 | 5.43 s | 1,002 | $2.24 |
+
+**Reading it honestly.**
+
+- The fine-tuned 1B model beats Gemini 2.5 Flash without thinking on full
+  triage (84% vs 68% all three right) at about the same latency, and it missed
+  no real incidents where Gemini missed 2.
+- Gemini with thinking is the most accurate (96%), but takes about 4× longer
+  per alert and costs money on every call.
+- The fine-tuned model is the fast, local option: no API dependency, alert data
+  stays in-house, and no rate limits. The evaluation itself hit repeated
+  `429 RESOURCE_EXHAUSTED` errors from Vertex AI, which a triage step that sees
+  every alert can't afford.
+- In absolute dollars, the hosted cost is modest at small volumes ($2.24 per
+  1,000 alerts with thinking). Latency, privacy and availability are the
+  stronger arguments for local inference.
+
+**Inference benchmark** (96 generated tokens, MPS, bf16):
+
+| variant | median latency | decode tok/s |
+|---|---|---|
+| base model | 1.968 s | 48.8 |
+| base + LoRA, unmerged | 2.085 s | 46.1 |
+| LoRA merged into base | 1.956 s | 49.1 |
+
+Merging removed the adapter overhead: 6.2% lower latency than unmerged, and
+the merged model runs at the base model's speed.
+
+**Possible next step.** Severity is a lookup plus a threshold. A reasoning
+model can compute it; a 1B model approximates it. Having the model output the
+*impact level* and computing severity from impact and tier in code would
+likely close most of the remaining gap, and it plays to each part's strengths:
+the model reads messy text, code applies the rule.
 
 ---
 

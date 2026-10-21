@@ -103,9 +103,24 @@ Optimizations, all measured:
 
 Every change, the evidence behind it and its effect are in [docs/EXPERIMENT-LOG.md](docs/EXPERIMENT-LOG.md).
 
-<!-- python make_table.py, then paste here -->
+On 100 hand-reviewed held-out alerts. Every model sees the service tier; the
+baselines get the full rules prompt with exact impact bands.
 
-_Pending._
+| model | valid JSON | family acc | severity acc | origin acc | all 3 right | incidents missed | median latency | prompt tokens | $ / 1k alerts |
+|---|---|---|---|---|---|---|---|---|---|
+| Llama 3.2 1B, untuned, rules prompt | 8% | 4% | 3% | 7% | 1% | 8/81 | 2.21 s | 957 | $0 |
+| Llama 3.2 1B, untuned, rules + 3 examples | 93% | 53% | 38% | 87% | 26% | 15/81 | 2.62 s | 1,534 | $0 |
+| **Llama 3.2 1B, fine-tuned (LoRA)** | **100%** | **96%** | **87%** | **100%** | **84%** | **0/81** | **1.30 s** | **240** | **$0** |
+| Gemini 2.5 Flash | 100% | 98% | 70% | 99% | 68% | 2/81 | 1.25 s | 1,002 | $0.48 |
+| Gemini 2.5 Flash + thinking | 99% | 99% | 96% | 99% | 96% | 0/81 | 5.43 s | 1,002 | $2.24 |
+
+The fine-tuned model beats Gemini 2.5 Flash on full triage (84% vs 68%) at
+the same latency, runs locally with no per-call cost, and missed no real
+incidents. Gemini with thinking is more accurate (96%) but about 4× slower.
+With 100 alerts, each one is a percentage point, so small gaps are noise.
+
+Merging the adapter into the base weights cut inference latency 6.2% against
+the unmerged adapter, matching the base model's speed (1.96 s for 96 tokens on MPS).
 
 Baselines evaluated on the same gold alerts: untuned Llama 3.2 1B (rules
 prompt, and rules + 3 examples), Gemini 2.5 Flash (rules prompt, JSON mode,
